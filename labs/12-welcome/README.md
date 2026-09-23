@@ -1,6 +1,6 @@
-# Lab 11 — Welcome and Getting Ready
+# Lab 12 — Welcome and Getting Ready
 
-This folder is used during **Lab 11**.
+This folder is used during **Lab 12**.
 
 👉 Follow the instructions on the course website.
 

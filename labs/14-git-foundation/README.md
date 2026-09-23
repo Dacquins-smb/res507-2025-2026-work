@@ -1,6 +1,6 @@
-# Lab 20 — Git as the Backbone of DevOps
+# Lab 14 — Git as the Backbone of DevOps
 
-This folder is used during **Lab 20**.
+This folder is used during **Lab 14**.
 
 👉 Follow the instructions on the course website.
 
