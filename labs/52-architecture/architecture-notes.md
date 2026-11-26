@@ -1,12 +1,12 @@
 ![Architecture du système](architecture.svg)
 
-# Quel noyau est partagé ?
+## Quel noyau est partagé ?
 <Les conteneurs app et base partagent le noyau de la VM Ubuntu.>
 
 ## Ce qui survit
 <Un Pod d'app est remplaçable car sans état ; la citation survit au remplacement du Pod de la base grâce au PVC ; trois réplicas + local-path sur une seule VM ne protègent pas contre la perte de la VM ou du disque. Sauvegardes et multi-nœuds : travail futur.>
 
-
+## Retour
 tetras@devops-vm:~/res507-2025-2026-work/labs/52-architecture$ kubectl -n quote-lab get pvc
 kubectl -n quote-lab get pods -l app=quote-db        # note le nom de l'ANCIEN pod
 grep -F "$quote_marker" /tmp/res509-quotes.html      # marqueur AVANT
