@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 745" width="1120" height="745" font-family="Helvetica, Arial, sans-serif" xmlns:c2pa="http://c2pa.org/manifest">
+  <defs>
+    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#555555"/></marker>
+    <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#C77700"/></marker>
+    <marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7A4FD1"/></marker>
+    <marker id="ae" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2E9B4A"/></marker>
+  </defs>
+
+  <rect width="1120" height="745" fill="#FFFFFF"/>
+  <text x="20" y="30" font-size="20" font-weight="bold" fill="#1F1F1F">Production Architecture — Quote API on Kubernetes (proposed)</text>
+
+  <!-- Users -->
+  <rect x="485" y="40" width="150" height="40" rx="8" fill="#F2F2F2" stroke="#555555" stroke-width="1.5"/>
+  <text x="560" y="65" font-size="13" font-weight="bold" text-anchor="middle" fill="#1F1F1F">Users (HTTPS)</text>
+
+  <!-- Cluster -->
+  <rect x="210" y="110" width="700" height="580" rx="12" fill="#FAFAFA" stroke="#555555" stroke-width="1.5"/>
+  <text x="226" y="132" font-size="13" font-weight="bold" fill="#555555">Kubernetes cluster</text>
+  <text x="680" y="165" font-size="11" font-style="italic" fill="#B3261E">Replicas share ONE node:</text>
+  <text x="680" y="181" font-size="11" font-style="italic" fill="#B3261E">pod HA ≠ node/disk recovery</text>
+
+  <!-- Ingress + Service -->
+  <rect x="460" y="140" width="200" height="40" rx="8" fill="#F2F2F2" stroke="#555555" stroke-width="1.5"/>
+  <text x="560" y="165" font-size="12" font-weight="bold" text-anchor="middle" fill="#1F1F1F">Ingress (public entry point)</text>
+  <line x1="560" y1="80" x2="560" y2="140" stroke="#555555" stroke-width="1.8" marker-end="url(#ag)"/>
+  <line x1="560" y1="180" x2="560" y2="200" stroke="#555555" stroke-width="1.8" marker-end="url(#ag)"/>
+  <rect x="460" y="200" width="200" height="38" rx="8" fill="#E6F0FF" stroke="#2F6FDE" stroke-width="1.5"/>
+  <text x="560" y="215" font-size="12" font-weight="bold" text-anchor="middle" fill="#1F1F1F">Service quote-api</text>
+  <text x="560" y="231" font-size="11" text-anchor="middle" fill="#1F1F1F">ClusterIP :3000</text>
+
+  <!-- Node / VM (failure boundary A) -->
+  <rect x="230" y="250" width="660" height="350" rx="10" fill="#FFFFFF" stroke="#D93025" stroke-width="2" stroke-dasharray="8 5"/>
+  <text x="242" y="578" font-size="10" font-weight="bold" fill="#D93025">FAILURE BOUNDARY A</text>
+  <text x="242" y="592" font-size="10" fill="#D93025">VM / node (single node = SPOF)</text>
+
+  <!-- Service -> pods -->
+  <line x1="560" y1="238" x2="335" y2="300" stroke="#555555" stroke-width="1.6" marker-end="url(#ag)"/>
+  <line x1="560" y1="238" x2="450" y2="300" stroke="#555555" stroke-width="1.6" marker-end="url(#ag)"/>
+  <line x1="560" y1="238" x2="565" y2="300" stroke="#555555" stroke-width="1.6" marker-end="url(#ag)"/>
+
+  <!-- Deployment -->
+  <rect x="250" y="285" width="400" height="170" rx="10" fill="#E6F0FF" stroke="#2F6FDE" stroke-width="1.5"/>
+  <rect x="282" y="300" width="105" height="60" rx="8" fill="#FFFFFF" stroke="#2F6FDE" stroke-width="1.3"/>
+  <text x="334" y="325" font-size="12" font-weight="bold" text-anchor="middle" fill="#1F1F1F">api pod 1</text>
+  <text x="334" y="342" font-size="10" text-anchor="middle" fill="#1F1F1F">probes + limits</text>
+  <rect x="397" y="300" width="105" height="60" rx="8" fill="#FFFFFF" stroke="#2F6FDE" stroke-width="1.3"/>
+  <text x="449" y="325" font-size="12" font-weight="bold" text-anchor="middle" fill="#1F1F1F">api pod 2</text>
+  <text x="449" y="342" font-size="10" text-anchor="middle" fill="#1F1F1F">probes + limits</text>
+  <rect x="512" y="300" width="105" height="60" rx="8" fill="#FFFFFF" stroke="#2F6FDE" stroke-width="1.3"/>
+  <text x="564" y="325" font-size="12" font-weight="bold" text-anchor="middle" fill="#1F1F1F">api pod 3</text>
+  <text x="564" y="342" font-size="10" text-anchor="middle" fill="#1F1F1F">probes + limits</text>
+  <text x="262" y="385" font-size="11" fill="#1F1F1F">Rollout: RollingUpdate (maxSurge 1, maxUnavailable 0)</text>
+  <text x="262" y="402" font-size="11" fill="#1F1F1F">Gated by readiness probe · undo: kubectl rollout undo</text>
+  <text x="262" y="419" font-size="11" fill="#1F1F1F">DB credentials via secretKeyRef (no literals)</text>
+  <text x="262" y="443" font-size="13" font-weight="bold" fill="#1F1F1F">Deployment quote-api · replicas: 3</text>
+
+  <!-- Pods -> Service postgres -->
+  <line x1="650" y1="305" x2="680" y2="305" stroke="#C77700" stroke-width="1.8" marker-end="url(#ao)"/>
+
+  <!-- Service postgres -->
+  <rect x="680" y="285" width="190" height="40" rx="8" fill="#FFF1E0" stroke="#E08A00" stroke-width="1.5"/>
+  <text x="775" y="302" font-size="12" font-weight="bold" text-anchor="middle" fill="#1F1F1F">Service postgres</text>
+  <text x="775" y="317" font-size="11" text-anchor="middle" fill="#1F1F1F">ClusterIP :5432</text>
+  <line x1="775" y1="325" x2="775" y2="350" stroke="#C77700" stroke-width="1.8" marker-end="url(#ao)"/>
+
+  <!-- StatefulSet postgres -->
+  <rect x="680" y="350" width="190" height="90" rx="10" fill="#FFF1E0" stroke="#E08A00" stroke-width="1.5"/>
+  <text x="775" y="368" font-size="12" font-weight="bold" text-anchor="middle" fill="#1F1F1F">StatefulSet postgres (1 replica)</text>
+  <rect x="700" y="378" width="150" height="48" rx="8" fill="#FFFFFF" stroke="#E08A00" stroke-width="1.3"/>
+  <text x="775" y="398" font-size="12" font-weight="bold" text-anchor="middle" fill="#1F1F1F">postgres-0</text>
+  <text x="775" y="414" font-size="10" text-anchor="middle" fill="#1F1F1F">creds from Secret</text>
+  <line x1="775" y1="440" x2="775" y2="470" stroke="#C77700" stroke-width="1.8" marker-end="url(#ao)"/>
+
+  <!-- PVC -->
+  <rect x="680" y="470" width="190" height="40" rx="8" fill="#FFF1E0" stroke="#E08A00" stroke-width="1.5"/>
+  <text x="775" y="488" font-size="12" font-weight="bold" text-anchor="middle" fill="#1F1F1F">PVC postgres-data</text>
+  <text x="775" y="502" font-size="10" font-style="italic" text-anchor="middle" fill="#B3261E">persistence, NOT a backup</text>
+  <line x1="775" y1="510" x2="775" y2="535" stroke="#C77700" stroke-width="1.8" marker-end="url(#ao)"/>
+
+  <!-- Disk (failure boundary B) -->
+  <rect x="680" y="535" width="190" height="40" rx="8" fill="#FFF1E0" stroke="#D93025" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="775" y="551" font-size="12" font-weight="bold" text-anchor="middle" fill="#1F1F1F">VM disk (PV backing)</text>
+  <text x="775" y="566" font-size="10" font-weight="bold" text-anchor="middle" fill="#D93025">FAILURE BOUNDARY B</text>
+
+  <!-- Secret -->
+  <rect x="250" y="490" width="190" height="56" rx="8" fill="#F0E8FF" stroke="#7A4FD1" stroke-width="1.5"/>
+  <text x="345" y="510" font-size="12" font-weight="bold" text-anchor="middle" fill="#1F1F1F">Secret db-credentials</text>
+  <text x="345" y="526" font-size="11" text-anchor="middle" fill="#1F1F1F">used by app + postgres</text>
+  <text x="345" y="540" font-size="11" text-anchor="middle" fill="#1F1F1F">created outside Git</text>
+  <line x1="345" y1="490" x2="345" y2="456" stroke="#7A4FD1" stroke-width="1.8" marker-end="url(#ap)"/>
+  <text x="353" y="476" font-size="10" fill="#7A4FD1">secretKeyRef</text>
+
+  <!-- CronJob -->
+  <rect x="460" y="490" width="190" height="56" rx="8" fill="#E5F6E8" stroke="#2E9B4A" stroke-width="1.5"/>
+  <text x="555" y="510" font-size="12" font-weight="bold" text-anchor="middle" fill="#1F1F1F">CronJob pg-backup</text>
+  <text x="555" y="526" font-size="11" text-anchor="middle" fill="#1F1F1F">scheduled pg_dump</text>
+  <text x="555" y="540" font-size="11" text-anchor="middle" fill="#1F1F1F">→ off-node storage</text>
+  <path d="M650 505 L665 505 L665 395 L680 395" fill="none" stroke="#2E9B4A" stroke-width="1.6" marker-end="url(#ae)"/>
+
+  <!-- Git repo (left external) -->
+  <rect x="20" y="300" width="170" height="60" rx="8" fill="#F2F2F2" stroke="#555555" stroke-width="1.5"/>
+  <text x="105" y="322" font-size="12" font-weight="bold" text-anchor="middle" fill="#1F1F1F">Git repository</text>
+  <text x="105" y="338" font-size="11" text-anchor="middle" fill="#1F1F1F">manifests only,</text>
+  <text x="105" y="352" font-size="11" text-anchor="middle" fill="#1F1F1F">no secrets</text>
+  <line x1="190" y1="330" x2="250" y2="330" stroke="#555555" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#ag)"/>
+  <text x="220" y="323" font-size="9" text-anchor="middle" fill="#555555">kubectl apply</text>
+
+  <!-- Credentials source (left external) -->
+  <rect x="20" y="480" width="170" height="76" rx="8" fill="#F0E8FF" stroke="#7A4FD1" stroke-width="1.5"/>
+  <text x="105" y="500" font-size="12" font-weight="bold" text-anchor="middle" fill="#1F1F1F">Credentials source</text>
+  <text x="105" y="516" font-size="11" text-anchor="middle" fill="#1F1F1F">kubectl create secret /</text>
+  <text x="105" y="531" font-size="11" text-anchor="middle" fill="#1F1F1F">Sealed Secrets / SOPS</text>
+  <text x="105" y="546" font-size="11" font-style="italic" text-anchor="middle" fill="#1F1F1F">never committed</text>
+  <line x1="190" y1="518" x2="250" y2="518" stroke="#7A4FD1" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#ap)"/>
+
+  <!-- Backup storage (right external, failure boundary C) -->
+  <rect x="930" y="480" width="170" height="72" rx="8" fill="#E5F6E8" stroke="#2E9B4A" stroke-width="2"/>
+  <text x="1015" y="500" font-size="12" font-weight="bold" text-anchor="middle" fill="#1F1F1F">Backup storage</text>
+  <text x="1015" y="516" font-size="11" text-anchor="middle" fill="#1F1F1F">object storage,</text>
+  <text x="1015" y="531" font-size="11" text-anchor="middle" fill="#1F1F1F">off-node / off-site</text>
+  <text x="1015" y="546" font-size="10" font-weight="bold" text-anchor="middle" fill="#2E9B4A">FAILURE BOUNDARY C</text>
+
+  <!-- Backup path -->
+  <path d="M555 546 L555 655 L1040 655 L1040 552" fill="none" stroke="#2E9B4A" stroke-width="1.8" marker-end="url(#ae)"/>
+  <text x="745" y="672" font-size="11" text-anchor="middle" fill="#2E9B4A">pg_dump → off-node backup (RPO = interval)</text>
+
+  <!-- Restore path -->
+  <path d="M1000 552 L1000 630 L775 630 L775 576" fill="none" stroke="#2E9B4A" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#ae)"/>
+  <text x="888" y="622" font-size="11" font-style="italic" text-anchor="middle" fill="#2E9B4A">restore after VM / disk loss</text>
+
+  <!-- Legend -->
+  <rect x="20" y="711" width="14" height="14" fill="#E6F0FF" stroke="#2F6FDE"/>
+  <text x="40" y="723" font-size="11" fill="#1F1F1F">App tier</text>
+  <rect x="120" y="711" width="14" height="14" fill="#FFF1E0" stroke="#E08A00"/>
+  <text x="140" y="723" font-size="11" fill="#1F1F1F">Data tier (Postgres, PVC, disk)</text>
+  <rect x="330" y="711" width="14" height="14" fill="#F0E8FF" stroke="#7A4FD1"/>
+  <text x="350" y="723" font-size="11" fill="#1F1F1F">Secrets</text>
+  <rect x="420" y="711" width="14" height="14" fill="#E5F6E8" stroke="#2E9B4A"/>
+  <text x="440" y="723" font-size="11" fill="#1F1F1F">Backup / restore</text>
+  <rect x="560" y="711" width="14" height="14" fill="#FFFFFF" stroke="#D93025" stroke-width="1.5" stroke-dasharray="3 2"/>
+  <text x="580" y="723" font-size="11" fill="#1F1F1F">Failure boundary (A: VM/node, B: disk, C: off-site backup)</text>
+<metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTo2ZGRhOTBhZi1jZWVhLTRhYWMtYTc2ZC0zYWIyZjA5MjIzOTIAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaMyAj4yqwSOu8yJHTEUmSbwAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDo5MDQxZTIwZS1iNTVlLTQ5YjItYTg0ZS1mMDliOTA5M2Q5NDZscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNojnrVWE822GDrGx+UbC2sqQAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFgg953AFBQZyst8Makos52t+Z1maIA/SKqg7WrLZppHW9mkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaEnjR5PBTzPGSt0oIigHZl4AAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRMAAAAAAAAAAAAAAAAZGhhc2hYIFF4o8k1kFOQvH3CRf8+bWPumMBR2th1yDozdLK8YXRgZG5hbWVuanVtYmYgbWFuaWZlc3RqZXhjbHVzaW9uc4GiZXN0YXJ0GS1vZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjZkZGE5MGFmLWNlZWEtNGFhYy1hNzZkLTNhYjJmMDkyMjM5Mi9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjExYzQ0MDQyLWYyN2UtNDI1My04MDU5LTdiZGQxMDk3NGYyYnJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCD3ncAUFBnKy3wxqSizna35nWZogD9IqqDtastmmkdb2aJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggnFQjSKJJnD5v9J9QjQkA+WKO++Yamd5Ic5E2jcjTLgOiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggUVCBM0N/MsUZDBg/zEKBBoxR/U454rmMU1Lsd5F+c6h0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQH2yQrRDurhuOQ8clL46S02hEcq3SMXux1Jyb5qULwd455KxwoOoA+0ZnqKQg9UuiYcJpNIP9tcmFVMuagTOMuc=</c2pa:manifest></metadata></svg>
